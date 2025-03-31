@@ -1,61 +1,99 @@
-import React, { useEffect, useState } from "react";
-import { db } from "../config/firebaseConfig"; 
+import React, { useState, useEffect } from "react";
+import { db } from "../config/firebaseConfig";
 import { ref, get, update } from "firebase/database";
+import MapComponent from "./MapComponent";
+import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
-    const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [showUserManagement, setShowUserManagement] = useState(false);
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            const usersRef = ref(db, "users");
-            const snapshot = await get(usersRef);
-            if (snapshot.exists()) {
-                setUsers(Object.entries(snapshot.val()));
-            }
-        };
-
-        fetchUsers();
-    }, []);
-
-    const updateRole = async (userId, newRole) => {
-        const userRef = ref(db, `users/${userId}`);
-        await update(userRef, { role: newRole });
-        alert(`Role pengguna berhasil diubah menjadi ${newRole}`);
-        window.location.reload(); // Refresh untuk update data
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const usersRef = ref(db, "users");
+        const snapshot = await get(usersRef);
+        if (snapshot.exists()) {
+          const usersData = Object.entries(snapshot.val()).map(([id, data]) => ({ id, ...data }));
+          setUsers(usersData);
+          console.log("Users fetched:", usersData);
+        } else {
+          console.log("No users found in database");
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
     };
+    fetchUsers();
+  }, []);
 
-    return (
-        <div>
-            <h2>Admin Dashboard - Kelola Peran Pengguna</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nama</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Ubah Role</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map(([id, user]) => (
-                        <tr key={id}>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
-                            <td>{user.role}</td>
-                            <td>
-                                {user.role !== "admin" && (
-                                    <>
-                                        <button onClick={() => updateRole(id, "polisi")}>Jadikan Polisi</button>
-                                        <button onClick={() => updateRole(id, "dinasPU")}>Jadikan Dinas PU</button>
-                                    </>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+  const updateUserRole = async (userId, newRole) => {
+    try {
+      const userRef = ref(db, `users/${userId}`);
+      await update(userRef, { role: newRole });
+      setUsers(users.map(user => (user.id === userId ? { ...user, role: newRole } : user)));
+      console.log(`User ${userId} role updated to ${newRole}`);
+    } catch (error) {
+      console.error("Error updating user role:", error);
+    }
+  };
+
+  return (
+    <div className="admin-dashboard">
+      {/* Sidebar */}
+      <div 
+        className={`sidebar ${sidebarVisible ? "visible" : ""}`} 
+        onMouseEnter={() => setSidebarVisible(true)} 
+        onMouseLeave={() => setSidebarVisible(false)}
+      >
+        <h2>Menu Admin</h2>
+        <ul>
+          <li onClick={() => setShowUserManagement(true)}>Kelola Peran Pengguna</li>
+        </ul>
+      </div>
+
+      {/* Map & Content */}
+      <div className={`map-container ${sidebarVisible ? "map-shifted" : ""}`}>
+        <MapComponent />
+      </div>
+
+      {/* Kelola Peran Pengguna */}
+      {showUserManagement && (
+        <div className="user-management">
+          <h2>Kelola Peran Pengguna</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Peran</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map(user => (
+                <tr key={user.id}>
+                  <td>{user.email}</td>
+                  <td>
+                    <select
+                      value={user.role}
+                      onChange={e => updateUserRole(user.id, e.target.value)}
+                    >
+                      <option value="user">User</option>
+                      <option value="polisi">Polisi</option>
+                      <option value="dinasPU">Dinas PU</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={() => setShowUserManagement(false)}>Tutup</button>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default AdminDashboard;
