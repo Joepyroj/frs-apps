@@ -47,7 +47,11 @@ const AdminDashboard = () => {
         onMouseEnter={() => setSidebarVisible(true)} 
         onMouseLeave={() => setSidebarVisible(false)}
       >
+<<<<<<< Updated upstream
         <h2>Menu Admin</h2>
+=======
+        <h2>Admin Menu</h2>
+>>>>>>> Stashed changes
         <ul>
           <li onClick={() => setShowUserManagement(true)}>Kelola Peran Pengguna</li>
         </ul>
@@ -61,7 +65,11 @@ const AdminDashboard = () => {
       {/* Kelola Peran Pengguna */}
       {showUserManagement && (
         <div className="user-management">
+<<<<<<< Updated upstream
           <h2>Kelola Peran Pengguna</h2>
+=======
+          <h2>Manage Role</h2>
+>>>>>>> Stashed changes
           <table>
             <thead>
               <tr>
