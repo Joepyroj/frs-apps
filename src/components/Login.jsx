@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, Link } from "react-router-dom"; 
 import { auth, db } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { ref, get } from "firebase/database";
@@ -98,6 +98,9 @@ const Login = () => {
           {loading ? "Loading..." : "Login"}
         </button>
       </form>
+      <p style={{ marginTop: "10px" }}>
+        Belum punya akun? <Link to="/signup">Daftar di sini</Link>
+      </p>
     </div>
   );
 };
