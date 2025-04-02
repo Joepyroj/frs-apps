@@ -15,7 +15,7 @@ const center = {
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const MapComponent = () => {
-  console.log("Google Maps API Key:", apiKey); // Debugging untuk cek apakah API key terbaca
+  console.log("Google Maps API Key:", apiKey); 
   return (
     <LoadScript googleMapsApiKey={apiKey}>
       <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>

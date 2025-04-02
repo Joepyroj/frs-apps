@@ -1,0 +1,240 @@
+/* Reset default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Layout container */
+.user-dashboard {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: -250px; /* Hidden by default */
+  height: 100%;
+  z-index: 1000;
+  padding: 20px;
+  transition: left 0.3s ease-in-out;
+}
+
+.sidebar.visible {
+  left: 0; /* Show sidebar */
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar ul li:hover {
+  background-color: #34495e;
+}
+
+.sidebar ul li.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* Map container */
+.map-container {
+  flex-grow: 1;
+  margin-left: 0; /* Adjust when sidebar is visible */
+  transition: margin-left 0.3s ease-in-out;
+  position: relative;
+}
+
+.map-container.map-shifted {
+  margin-left: 250px; /* Shift map when sidebar is visible */
+}
+
+.map-container .warning {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.map-container .warning h3 {
+  font-size: 1.2rem;
+  color: #e74c3c;
+}
+
+/* Content area for forms */
+.content {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  z-index: 100;
+}
+
+.content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.content form input,
+.content form textarea,
+.content form select {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.content form button {
+  padding: 10px;
+  background-color: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.content form button:hover {
+  background-color: #34495e;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .sidebar.visible {
+    left: 0;
+  }
+
+  .map-container.map-shifted {
+    margin-left: 200px;
+  }
+
+  .content {
+    max-width: 300px;
+  }
+}
+
+/* Tombol Toggle Sidebar */
+.toggle-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: #2c3e50;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  z-index: 1100; /* Pastikan tombol berada di atas semua elemen */
+}
+
+.toggle-btn:hover {
+  background-color: #34495e;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: -250px; /* Hidden by default */
+  height: 100%;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000; /* Pastikan sidebar berada di atas elemen lain */
+  padding: 20px;
+}
+
+.sidebar.visible {
+  transform: translateX(250px); /* Slide in */
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li {
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar ul li:hover {
+  background-color: #34495e;
+}
+
+.sidebar ul li.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* Map Container */
+.map-container {
+  flex-grow: 1;
+  margin-left: 0; /* Adjust when sidebar is visible */
+  transition: margin-left 0.3s ease-in-out;
+  position: relative;
+}
+
+.map-container.map-shifted {
+  margin-left: 250px; /* Shift map when sidebar is visible */
+}

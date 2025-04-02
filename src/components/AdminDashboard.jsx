@@ -1,13 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../config/firebaseConfig";
 import { ref, get, update } from "firebase/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth"; 
 import MapComponent from "./MapComponent";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
-  const [sidebarVisible, setSidebarVisible] = useState(false);
   const [showUserManagement, setShowUserManagement] = useState(false);
+  const [currentUserRole, setCurrentUserRole] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserId(user.uid);
+        fetchCurrentUserRole(user.uid);
+      } else {
+        setCurrentUserId(null);
+        setCurrentUserRole(null);
+      }
+    });
+  }, []);
+
+  const fetchCurrentUserRole = async (userId) => {
+    try {
+      const userRef = ref(db, `users/${userId}`);
+      const snapshot = await get(userRef);
+      if (snapshot.exists()) {
+        setCurrentUserRole(snapshot.val().role);
+      }
+    } catch (error) {
+      console.error("Error fetching user role:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -41,51 +68,45 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      {/* Area Hover agar sidebar muncul saat kursor mendekati */}
+      <div className="sidebar-hover-area"></div>
+      
       {/* Sidebar */}
-      <div 
-        className={`sidebar ${sidebarVisible ? "visible" : ""}`} 
-        onMouseEnter={() => setSidebarVisible(true)} 
-        onMouseLeave={() => setSidebarVisible(false)}
-      >
-<<<<<<< Updated upstream
+      <div className="sidebar">
         <h2>Menu Admin</h2>
-=======
-        <h2>Admin Menu</h2>
->>>>>>> Stashed changes
+        <p>Peran Anda: <strong>{currentUserRole || "Memuat..."}</strong></p>
         <ul>
           <li onClick={() => setShowUserManagement(true)}>Kelola Peran Pengguna</li>
         </ul>
       </div>
 
       {/* Map & Content */}
-      <div className={`map-container ${sidebarVisible ? "map-shifted" : ""}`}>
+      <div className="map-container">
         <MapComponent />
       </div>
 
       {/* Kelola Peran Pengguna */}
       {showUserManagement && (
         <div className="user-management">
-<<<<<<< Updated upstream
-          <h2>Kelola Peran Pengguna</h2>
-=======
-          <h2>Manage Role</h2>
->>>>>>> Stashed changes
+          <h2>Manage User Role</h2>
           <table>
             <thead>
               <tr>
+                <th>Nama</th>
                 <th>Email</th>
                 <th>Peran</th>
-                <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
               {users.map(user => (
                 <tr key={user.id}>
+                  <td>{user.name || "Tidak ada nama"}</td>
                   <td>{user.email}</td>
                   <td>
                     <select
                       value={user.role}
                       onChange={e => updateUserRole(user.id, e.target.value)}
+                      disabled={user.id === currentUserId} 
                     >
                       <option value="user">User</option>
                       <option value="polisi">Polisi</option>
