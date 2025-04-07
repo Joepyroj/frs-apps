@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../config/firebaseConfig";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { ref, set } from "firebase/database";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -24,13 +24,13 @@ const Signup = () => {
       await sendEmailVerification(user);
 
       // Simpan data user ke Firebase Realtime Database dengan role "user"
-      await set(ref(db, `users/${user.uid}`), {
+      await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         name: name,
         email: email,
         role: "user", // Semua user baru mendapat role "user"
         verified: false, // Status email belum diverifikasi
-        createdAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
       });
 
       alert("Pendaftaran berhasil! Silakan cek email untuk verifikasi.");

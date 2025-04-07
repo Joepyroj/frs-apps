@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom"; 
 import { auth, db } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { ref, get } from "firebase/database";
+import { doc, getDoc } from "firebase/firestore";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -31,11 +31,12 @@ const Login = () => {
       }
 
       // ** Ambil role pengguna dari database
-      const userRef = ref(db, `users/${user.uid}`);
-      const snapshot = await get(userRef);
+      const userDocRef = doc(db, "users", user.uid);
+      const snapshot = await getDoc(userDocRef);
 
       if (snapshot.exists()) {
-        const role = snapshot.val().role;
+        const data = snapshot.data();
+        const role = data.role;
         console.log("👤 Peran pengguna:", role);
 
         // ** Navigasi berdasarkan peran
@@ -53,8 +54,8 @@ const Login = () => {
           navigate("/user-dashboard");
         }
       } else {
-        setError("Peran pengguna tidak ditemukan di database.");
-        console.error("⚠️ Role tidak ditemukan di database.");
+        setError("Data pengguna tidak ditemukan. Silakan hubungi admin.");
+        console.error("⚠️ Dokumen user tidak ditemukan di Firestore.");
       }
     } catch (err) {
       console.error("❌ Error saat login:", err);

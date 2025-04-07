@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { auth, db } from "./config/firebaseConfig";
-import { ref, get } from "firebase/database";
-import { onAuthStateChanged } from "firebase/auth"; // ✅ Tambahkan listener Firebase Auth
+import { doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import PrivateRoute from "./components/PrivateRoute";
@@ -18,16 +18,14 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
-  // 🔄 Pantau perubahan autentikasi secara real-time
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
 
-    return () => unsubscribe(); // Bersihkan listener saat komponen unmount
+    return () => unsubscribe();
   }, []);
 
-  // 🔄 Ambil role user ketika `user` berubah
   useEffect(() => {
     const fetchUserRole = async () => {
       if (!user) {
@@ -38,16 +36,18 @@ const App = () => {
 
       setLoading(true);
       try {
-        const userRef = ref(db, `users/${user.uid}`);
-        const snapshot = await get(userRef);
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
 
-        if (snapshot.exists()) {
-          setUserRole(snapshot.val().role);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setUserRole(data.role || null);
         } else {
+          console.warn("❗ Dokumen profil tidak ditemukan");
           setUserRole(null);
         }
       } catch (error) {
-        console.error("Error fetching user role:", error);
+        console.error("❌ Gagal mengambil peran pengguna:", error);
         setUserRole(null);
       } finally {
         setLoading(false);
@@ -60,20 +60,18 @@ const App = () => {
   if (loading) {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}>
-        <h3>🔄 Memuat data...</h3>
+        <h3>🔄 Memuat data pengguna...</h3>
       </div>
     );
   }
 
   return (
     <Routes>
-      {/* 🔹 Halaman Login & Sign Up */}
       <Route path="/" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
-      {/* 🔹 Dashboard sesuai role */}
       <Route
         path="/admin-dashboard"
         element={
@@ -107,7 +105,6 @@ const App = () => {
         }
       />
 
-      {/* 🔹 Fallback jika tidak ada rute yang cocok */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
