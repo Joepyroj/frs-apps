@@ -1,0 +1,233 @@
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* Container principal with background image */
+.login-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: url("../assets/bg.jpg") center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.login-app-logo {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.app-logo {
+  width: 60px;
+  height: 60px;
+  margin-right: 8px;
+}
+
+.app-name {
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.login-content {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  height: 80vh;
+  margin: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.login-illustration {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.jogo-logo {
+  max-width: 350px;
+  margin-bottom: 20px;
+}
+
+.login-form-container {
+  width: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  margin-right: 50px;
+}
+
+.login-form-box {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 50px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+  color: #1e3a5f;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.login-subtitle {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.login-error {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff6b6b;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.login-input-group {
+  margin-bottom: 20px;
+}
+
+.login-label {
+  display: block;
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.login-input {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: #333;
+  padding: 12px 15px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: #52dee5;
+  box-shadow: 0 0 0 2px rgba(82, 222, 229, 0.2);
+}
+
+.login-input::placeholder {
+  color: #aaa;
+}
+
+/* Botón de login */
+.login-button {
+  width: 100%;
+  background-color: #52dee5;
+  color: #1e3a5f;
+  border: none;
+  border-radius: 5px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.login-button:hover {
+  background-color: #3cc7d0;
+}
+
+.login-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Sección de registro */
+.register-section {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.register-text {
+  color: #666;
+}
+
+.register-link {
+  color: #1e3a5f;
+  font-weight: 500;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: color 0.3s ease;
+}
+
+.register-link:hover {
+  color: #52dee5;
+  text-decoration: underline;
+}
+
+/* Diseño responsivo */
+@media (max-width: 900px) {
+  .login-content {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .login-illustration {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  .jogo-logo {
+    max-width: 250px;
+  }
+
+  .login-form-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form-box {
+    padding: 20px;
+  }
+
+  .login-app-logo {
+    position: static;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .login-content {
+    height: auto;
+  }
+
+  .login-illustration {
+    height: 250px;
+    min-height: 250px;
+  }
+
+  .jogo-logo {
+    max-width: 200px;
+  }
+}

@@ -3,6 +3,10 @@ import { useNavigate, Link } from "react-router-dom";
 import { auth, db } from "../config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import "./login.css";
+// Import your logo image - adjust the path as needed
+import logoImage from "../assets/logo.png"; 
+// Background image is handled via CSS
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -75,33 +79,60 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleLogin}>
-        <input 
-          type="email" 
-          placeholder="Email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
-          autoComplete="email"
-        />
-        <input 
-          type="password" 
-          placeholder="Password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-          autoComplete="current-password"
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Loading..." : "Login"}
-        </button>
-      </form>
-      <p style={{ marginTop: "10px" }}>
-        Belum punya akun? <Link to="/signup">Daftar di sini</Link>
-      </p>
+    <div className="login-container"> 
+      <div className="login-content">
+        <div className="login-illustration">
+          {/* Logo in the left section */}
+          <img src={logoImage} alt="Jogo Suroboyo" className="jogo-logo" />
+          
+        </div>
+        
+        <div className="login-form-container">
+          <div className="login-form-box">
+            <h2 className="login-title">Login</h2>
+            
+            
+            {error && <div className="login-error">{error}</div>}
+            
+            <form onSubmit={handleLogin} className="login-form">
+              <div className="login-input-group">
+                <label htmlFor="username" className="login-label">Username</label>
+                <input
+                  id="username"
+                  type="email"
+                  placeholder="Enter your username"
+                  className="login-input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="login-input-group">
+                <label htmlFor="password" className="login-label">Password</label>
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  className="login-input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />                
+              </div>
+              
+              <button type="submit" className="login-button" disabled={loading}>
+                {loading ? "LOADING..." : "LOGIN"}
+              </button>
+              
+              <div className="register-section">
+                <span className="register-text">Belum Daftar?</span>
+                <Link to="/signup" className="register-link">Daftar disini</Link>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

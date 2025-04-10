@@ -158,6 +158,7 @@ const UserDashboard = () => {
         const loc = { lat: coords.latitude, lng: coords.longitude };
         setCrimeReport((prev) => ({ ...prev, location: loc }));
         setRoadReport((prev) => ({ ...prev, location: loc }));
+        document.querySelector(".location-status")?.classList.add("success");
       },
       (err) => {
         console.error("Gagal mendapatkan lokasi:", err);
@@ -166,27 +167,41 @@ const UserDashboard = () => {
     );
   };
 
+  const closeForm = () => {
+    setActiveForm(null);
+  };
+
   return (
     <div className="user-dashboard">
+      {/* Sidebar trigger area */}
+      <div className="sidebar-trigger"></div>
+      
+      {/* Sidebar */}
       <div className="sidebar">
         <h2>Menu User</h2>
         <ul>
-          <li onClick={() => setActiveForm("profile")}>Lengkapi Profil</li>
+          <li onClick={() => setActiveForm("profile")}>
+            <span className="menu-icon">👤</span>
+            <span className="menu-text">Lengkapi Profil</span>
+          </li>
           <li
             className={!profileComplete ? "disabled" : ""}
             onClick={() => profileComplete && setActiveForm("crime")}
           >
-            Laporkan Kejahatan
+            <span className="menu-icon">🚨</span>
+            <span className="menu-text">Laporkan Kejahatan</span>
           </li>
           <li
             className={!profileComplete ? "disabled" : ""}
             onClick={() => profileComplete && setActiveForm("road")}
           >
-            Laporkan Jalan Rusak
+            <span className="menu-icon">🚧</span>
+            <span className="menu-text">Laporkan Jalan Rusak</span>
           </li>
         </ul>
       </div>
 
+      {/* Map Container */}
       <div className="map-container">
         <MapComponent
           crimeReports={crimeReportsData}
@@ -196,6 +211,7 @@ const UserDashboard = () => {
         {!profileComplete && (
           <div className="warning">
             <h3>Silakan lengkapi profil terlebih dahulu!</h3>
+            <p>Klik menu "Lengkapi Profil" pada sidebar untuk melanjutkan</p>
           </div>
         )}
 
@@ -204,6 +220,7 @@ const UserDashboard = () => {
             data={profileData}
             setData={setProfileData}
             onSubmit={handleProfileSubmit}
+            onClose={closeForm}
           />
         )}
         {activeForm === "crime" && (
@@ -212,6 +229,7 @@ const UserDashboard = () => {
             setData={setCrimeReport}
             onSubmit={handleCrimeReport}
             onGetLocation={handleGetLocation}
+            onClose={closeForm}
           />
         )}
         {activeForm === "road" && (
@@ -220,6 +238,7 @@ const UserDashboard = () => {
             setData={setRoadReport}
             onSubmit={handleRoadReport}
             onGetLocation={handleGetLocation}
+            onClose={closeForm}
           />
         )}
       </div>
@@ -228,125 +247,236 @@ const UserDashboard = () => {
 };
 
 // Modular Forms
-const ProfileForm = ({ data, setData, onSubmit }) => (
-  <form onSubmit={onSubmit} className="content">
-    <h2>Lengkapi Profil</h2>
-    <input
-      type="text"
-      placeholder="Nama Sesuai KTP"
-      value={data.nama}
-      onChange={(e) => setData({ ...data, nama: e.target.value })}
-      required
-    />
-    <input
-      type="text"
-      placeholder="Nomor KTP"
-      value={data.noKTP}
-      onChange={(e) => setData({ ...data, noKTP: e.target.value })}
-      required
-    />
-    <textarea
-      placeholder="Alamat Lengkap"
-      value={data.alamat}
-      onChange={(e) => setData({ ...data, alamat: e.target.value })}
-      required
-    />
-    <button type="submit">Simpan Profil</button>
-  </form>
+const ProfileForm = ({ data, setData, onSubmit, onClose }) => (
+  <div className="form-container">
+    <form onSubmit={onSubmit} className="content">
+      <div className="form-header">
+        <h2>Lengkapi Profil</h2>
+        <button type="button" className="close-btn" onClick={onClose}>×</button>
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="nama">Nama Lengkap</label>
+        <input
+          id="nama"
+          type="text"
+          placeholder="Nama Sesuai KTP"
+          value={data.nama}
+          onChange={(e) => setData({ ...data, nama: e.target.value })}
+          required
+        />
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="noKTP">Nomor KTP</label>
+        <input
+          id="noKTP"
+          type="text" 
+          placeholder="Nomor KTP"
+          value={data.noKTP}
+          onChange={(e) => setData({ ...data, noKTP: e.target.value })}
+          required
+        />
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="alamat">Alamat Lengkap</label>
+        <textarea
+          id="alamat"
+          placeholder="Alamat Lengkap"
+          value={data.alamat}
+          onChange={(e) => setData({ ...data, alamat: e.target.value })}
+          required
+        />
+      </div>
+      
+      <div className="form-footer">
+        <button type="submit" className="submit-btn">Simpan Profil</button>
+      </div>
+    </form>
+  </div>
 );
 
-const CrimeForm = ({ data, setData, onSubmit, onGetLocation }) => (
-  <form onSubmit={onSubmit} className="content">
-    <h2>Laporkan Kejahatan</h2>
-    <select
-      value={data.description}
-      onChange={(e) => setData({ ...data, description: e.target.value })}
-      required
-    >
-      <option value="">Pilih Kejahatan</option>
-      <option value="Pencurian Kendaraan Bermotor">
-        Pencurian Kendaraan Bermotor
-      </option>
-      <option value="Balap Liar">Balap Liar</option>
-    </select>
-
-    {data.description === "Pencurian Kendaraan Bermotor" && (
-      <>
+const CrimeForm = ({ data, setData, onSubmit, onGetLocation, onClose }) => (
+  <div className="form-container">
+    <form onSubmit={onSubmit} className="content">
+      <div className="form-header">
+        <h2>Laporkan Kejahatan</h2>
+        <button type="button" className="close-btn" onClick={onClose}>×</button>
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="crimeType">Jenis Kejahatan</label>
         <select
-          value={data.vehicleType}
-          onChange={(e) => setData({ ...data, vehicleType: e.target.value })}
+          id="crimeType"
+          value={data.description}
+          onChange={(e) => setData({ ...data, description: e.target.value })}
           required
         >
-          <option value="">Jenis Kendaraan</option>
-          <option value="Roda 2">Roda 2</option>
-          <option value="Roda 4">Roda 4</option>
+          <option value="">Pilih Kejahatan</option>
+          <option value="Pencurian Kendaraan Bermotor">
+            Pencurian Kendaraan Bermotor
+          </option>
+          <option value="Balap Liar">Balap Liar</option>
         </select>
-        <input
-          type="text"
-          placeholder="Nomor Polisi"
-          value={data.plateNumber}
-          onChange={(e) => setData({ ...data, plateNumber: e.target.value })}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Merk"
-          value={data.brand}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Warna"
-          value={data.color}
-          onChange={(e) => setData({ ...data, color: e.target.value })}
-          required
-        />
-      </>
-    )}
+      </div>
 
-    <button type="button" onClick={onGetLocation}>
-      Gunakan Lokasi Saat Ini
-    </button>
-    <input
-      type="text"
-      placeholder="Lokasi"
-      value={data.location ? `${data.location.lat}, ${data.location.lng}` : ""}
-      readOnly
-    />
-    <button type="submit">Kirim Laporan</button>
-  </form>
+      {data.description === "Pencurian Kendaraan Bermotor" && (
+        <div className="vehicle-details">
+          <div className="form-group">
+            <label htmlFor="vehicleType">Jenis Kendaraan</label>
+            <select
+              id="vehicleType"
+              value={data.vehicleType}
+              onChange={(e) => setData({ ...data, vehicleType: e.target.value })}
+              required
+            >
+              <option value="">Jenis Kendaraan</option>
+              <option value="Roda 2">Roda 2</option>
+              <option value="Roda 4">Roda 4</option>
+            </select>
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="plateNumber">Nomor Polisi</label>
+            <input
+              id="plateNumber"
+              type="text"
+              placeholder="Contoh: B 1234 XYZ"
+              value={data.plateNumber}
+              onChange={(e) => setData({ ...data, plateNumber: e.target.value })}
+              required
+            />
+          </div>
+          
+          <div className="form-row">
+            <div className="form-group half">
+              <label htmlFor="brand">Merk</label>
+              <input
+                id="brand"
+                type="text"
+                placeholder="Contoh: Honda"
+                value={data.brand}
+                onChange={(e) => setData({ ...data, brand: e.target.value })}
+                required
+              />
+            </div>
+            
+            <div className="form-group half">
+              <label htmlFor="color">Warna</label>
+              <input
+                id="color"
+                type="text"
+                placeholder="Contoh: Hitam"
+                value={data.color}
+                onChange={(e) => setData({ ...data, color: e.target.value })}
+                required
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="form-group">
+        <label>Lokasi Kejadian</label>
+        <div className="location-field">
+          <input
+            type="text"
+            placeholder="Klik tombol untuk mendapatkan lokasi"
+            value={data.location ? `${data.location.lat}, ${data.location.lng}` : ""}
+            readOnly
+            className={data.location ? "has-location" : ""}
+          />
+          <button type="button" className="location-btn" onClick={onGetLocation}>
+            <span className="location-icon">📍</span>
+          </button>
+        </div>
+        <div className={`location-status ${data.location ? "success" : ""}`}>
+          {data.location ? "Lokasi berhasil diambil" : "Lokasi belum diambil"}
+        </div>
+      </div>
+      
+      <div className="form-footer">
+        <button type="submit" className="submit-btn" disabled={!data.location}>
+          Kirim Laporan
+        </button>
+      </div>
+    </form>
+  </div>
 );
 
-const RoadForm = ({ data, setData, onSubmit, onGetLocation }) => (
-  <form onSubmit={onSubmit} className="content">
-    <h2>Laporkan Jalan Rusak</h2>
-    <input
-      type="text"
-      placeholder="Deskripsi"
-      value={data.description}
-      onChange={(e) => setData({ ...data, description: e.target.value })}
-      required
-    />
-    <select
-      value={data.severity}
-      onChange={(e) => setData({ ...data, severity: e.target.value })}
-    >
-      <option value="ringan">Ringan</option>
-      <option value="sedang">Sedang</option>
-      <option value="parah">Parah</option>
-    </select>
-    <button type="button" onClick={onGetLocation}>
-      Gunakan Lokasi Saat Ini
-    </button>
-    <input
-      type="text"
-      placeholder="Lokasi"
-      value={data.location ? `${data.location.lat}, ${data.location.lng}` : ""}
-      readOnly
-    />
-    <button type="submit">Kirim Laporan</button>
-  </form>
+const RoadForm = ({ data, setData, onSubmit, onGetLocation, onClose }) => (
+  <div className="form-container">
+    <form onSubmit={onSubmit} className="content">
+      <div className="form-header">
+        <h2>Laporkan Jalan Rusak</h2>
+        <button type="button" className="close-btn" onClick={onClose}>×</button>
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="description">Deskripsi Kerusakan</label>
+        <textarea
+          id="description"
+          placeholder="Jelaskan kondisi kerusakan jalan"
+          value={data.description}
+          onChange={(e) => setData({ ...data, description: e.target.value })}
+          required
+        />
+      </div>
+      
+      <div className="form-group">
+        <label htmlFor="severity">Tingkat Kerusakan</label>
+        <div className="severity-selector">
+          <div 
+            className={`severity-option ${data.severity === 'ringan' ? 'selected' : ''}`}
+            onClick={() => setData({ ...data, severity: 'ringan' })}
+          >
+            <span className="severity-icon">🟢</span>
+            <span>Ringan</span>
+          </div>
+          <div 
+            className={`severity-option ${data.severity === 'sedang' ? 'selected' : ''}`}
+            onClick={() => setData({ ...data, severity: 'sedang' })}
+          >
+            <span className="severity-icon">🟡</span>
+            <span>Sedang</span>
+          </div>
+          <div 
+            className={`severity-option ${data.severity === 'parah' ? 'selected' : ''}`}
+            onClick={() => setData({ ...data, severity: 'parah' })}
+          >
+            <span className="severity-icon">🔴</span>
+            <span>Parah</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="form-group">
+        <label>Lokasi Jalan Rusak</label>
+        <div className="location-field">
+          <input
+            type="text"
+            placeholder="Klik tombol untuk mendapatkan lokasi"
+            value={data.location ? `${data.location.lat}, ${data.location.lng}` : ""}
+            readOnly
+            className={data.location ? "has-location" : ""}
+          />
+          <button type="button" className="location-btn" onClick={onGetLocation}>
+            <span className="location-icon">📍</span>
+          </button>
+        </div>
+        <div className={`location-status ${data.location ? "success" : ""}`}>
+          {data.location ? "Lokasi berhasil diambil" : "Lokasi belum diambil"}
+        </div>
+      </div>
+      
+      <div className="form-footer">
+        <button type="submit" className="submit-btn" disabled={!data.location}>
+          Kirim Laporan
+        </button>
+      </div>
+    </form>
+  </div>
 );
 
 export default UserDashboard;

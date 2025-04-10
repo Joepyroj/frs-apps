@@ -197,9 +197,7 @@ const AdminDashboard = () => {
       <div className="sidebar-hover-area"></div>
       <div className="sidebar">
         <h2>Menu Admin</h2>
-        <p>
-          Peran Anda: <strong>{currentUserRole || "Memuat..."}</strong>
-        </p>
+        
         <ul>
           <li
             onClick={() => {
