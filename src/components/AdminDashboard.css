@@ -1,285 +1,449 @@
+/* Reset dasar (opsional) */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-.admin-dashboard {
-  display: flex;
-  height: 100vh;
-  background: white;
-  overflow: visible;
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
-/* Sidebar default tersembunyi di kiri */
-.sidebar {
-  width: 250px;
-  background-color: rgba(225, 225, 225, 0.8);
-  color: #fff;
-  position: fixed;
-  top: 0;
-  left: -250px; /* Sidebar tersembunyi */
-  height: 100%;
-  transition: left 0.3s ease-in-out;
-  z-index: 1000;
-  padding: 20px;
-}
-
-/* Area hover di sisi kiri untuk memunculkan sidebar */
-.sidebar-hover-area {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 20px;
-  height: 100%;
-  z-index: 999; /* Di bawah sidebar */
-  background: transparent; /* Tidak terlihat */
-}
-
-/* Ketika area hover atau sidebar di-hover, tampilkan sidebar */
-.sidebar-hover-area:hover + .sidebar,
-.sidebar:hover {
-  left: 0;
-}
-
-/* Styling untuk daftar menu di sidebar */
-.sidebar h2 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-
-.sidebar ul {
-  list-style: none;
-}
-
-.sidebar ul li {
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+/* Wrapper Utama */
+.admin-dashboard-overlay {
   position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; /* Mencegah scroll dan menyembunyikan sidebar awal */
 }
 
-.sidebar ul li:hover {
-  background-color: #34495e;
+/* Kontainer Peta Fullscreen */
+.map-container-fullscreen {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-/* Badge notifikasi untuk menu sidebar */
-.notification-badge {
+/* Kontrol Overlay di Atas Peta */
+.overlay-controls {
+  position: absolute;
+  top: 15px; /* Jarak dari atas */
+  left: 15px; /* Jarak dari kiri */
+  z-index: 1000; /* Di atas peta, di bawah sidebar */
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap; /* Agar tombol bisa turun baris */
+  gap: 10px; /* Jarak antar elemen kontrol */
+  background-color: rgba(255, 255, 255, 0.9); /* Background agar terbaca */
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.3s ease;
+}
+
+.user-greeting-overlay {
+  font-size: 10px;
+  font-weight: 500;
+  color: #333;
+  margin-right: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.control-button-overlay .notification-badge {
+  background-color: #e74c3c; /* Warna merah */
+  color: white;
+  font-size: 11px; /* Ukuran font badge */
+  padding: 2px 6px; /* Padding di dalam badge */
+  border-radius: 50%; /* Membuatnya bulat */
+  position: absolute; /* Posisi relatif terhadap tombol */
+  top: -6px; /* Sedikit ke atas */
+  right: -6px; /* Sedikit ke kanan */
+  min-width: 18px; /* Lebar minimum */
+  height: 18px; /* Tinggi minimum */
+  line-height: 14px; /* Menengahkan angka secara vertikal */
+  font-weight: bold;
+  text-align: center;
+  pointer-events: none; /* Agar tidak mengganggu klik tombol */
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); /* Shadow tipis */
+}
+
+.control-button-overlay:hover:not(:disabled) {
+  background-color: #f0f0f0;
+  border-color: #bbb;
+}
+
+/* Styling Badge Notifikasi */
+.control-button-overlay .notification-badge {
   background-color: #e74c3c;
   color: white;
-  font-size: 0.8rem;
-  padding: 2px 6px;
+  font-size: 10px;
+  padding: 1px 5px;
   border-radius: 50%;
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.map-container {
-  flex-grow: 1;
-  transition: margin-left 0.3s ease-in-out;
-}
-
-/* Modal Admin Umum */
-.admin-modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 25px;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  z-index: 100;
-  width: 90%;
-  max-width: 800px;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.admin-modal h2 {
-  color: #2b3c4c;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #f0f0f0;
-}
-
-.admin-modal button {
-  margin-top: 20px;
-  padding: 10px 15px;
-  background: #3498db;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background 0.3s ease;
-  font-weight: bold;
-}
-
-.admin-modal button:hover {
-  background: #2980b9;
-}
-
-/* Styling untuk user management */
-.user-management table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-.user-management th,
-.user-management td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
-}
-
-.user-management th {
-  background-color: #f8f9fa;
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-.user-management tbody tr:hover {
-  background-color: #f8f9fa;
-}
-
-.user-management select {
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  cursor: pointer;
-  background-color: #fff;
-  width: 100%;
-}
-
-/* Styling untuk Verifikasi Pengguna */
-.user-verification {
-  background: #ffffff;
-}
-
-.empty-state {
+  top: -5px;
+  right: -5px;
+  min-width: 16px;
   text-align: center;
-  padding: 30px;
-  color: #7f8c8d;
-  font-style: italic;
+  line-height: 14px;
+  font-weight: bold;
+  pointer-events: none; /* Agar tidak mengganggu klik tombol */
 }
 
-.verification-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-  margin-top: 20px;
+/* Sidebar Overlay (Geser dari Kiri) */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 400px; /* Sidebar admin mungkin perlu lebih lebar */
+  max-width: 95%;
+  height: 100%;
+  background-color: #f8f9fa; /* Warna latar sidebar */
+  border-right: 1px solid #d1d1d1;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1001; /* Di atas segalanya */
+  display: flex;
+  flex-direction: column; /* Konten tersusun vertikal */
 }
 
-.verification-card {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 20px;
-  background-color: #f9f9f9;
+/* Munculkan Sidebar */
+.admin-dashboard-overlay.sidebar-open .sidebar-overlay {
+  transform: translateX(0%);
+}
+
+/* Konten di dalam Sidebar Admin */
+.sidebar-admin-content {
+  flex-grow: 1; /* Mengisi sisa ruang */
+  overflow: hidden; /* Kontrol scroll di body */
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 0; /* Padding diatur di header/body */
 }
 
-.verification-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.admin-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0; /* Header tidak scroll */
+  background-color: #e9ecef; /* Warna header sidebar admin */
 }
 
-.user-info h3 {
+.admin-sidebar-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #343a40; /* Warna teks header */
+}
+
+.close-sidebar-btn {
+  /* Tombol close 'X' */
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #6c757d; /* Warna tombol close */
+  padding: 0 5px;
+}
+.close-sidebar-btn:hover {
+  color: #343a40;
+}
+
+.admin-sidebar-body {
+  flex-grow: 1; /* Body mengisi ruang */
+  overflow-y: auto; /* Body bisa scroll */
+  padding: 20px; /* Padding untuk konten di body */
+}
+
+/* Wrapper untuk setiap section konten admin */
+.admin-section-content {
+  width: 100%;
+}
+
+/* Styling Tabel Manage Users */
+.manage-users-table {
+  width: 100%;
+  overflow-x: auto; /* Scroll horizontal jika perlu */
+}
+.manage-users-table table {
+  width: 100%;
+  min-width: 300px; /* Lebar minimum agar tidak terlalu sempit */
+  border-collapse: collapse;
+  font-size: 9px;
+}
+.manage-users-table th,
+.manage-users-table td {
+  border: 1px solid #dee2e6; /* Warna border tabel */
+  padding: 8px 10px; /* Padding sel tabel */
+  text-align: left;
+  vertical-align: middle;
+}
+.manage-users-table th {
+  background-color: #f1f3f5; /* Warna header kolom */
+  font-weight: 600;
+  /* white-space: nowrap; Agar header tidak turun baris */
+}
+.manage-users-table select {
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #ced4da; /* Warna border select */
+  width: 100%;
+  max-width: 120px; /* Batasi lebar select */
+  background-color: #fff;
+}
+.manage-users-table select:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.manage-users-table tbody tr:nth-child(even) {
+  background-color: #f8f9fa; /* Warna baris genap */
+}
+.manage-users-table tbody tr:hover {
+  background-color: #e9ecef; /* Warna saat hover */
+}
+
+/* Styling Daftar Verifikasi */
+.verification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Jarak antar kartu */
+}
+.verification-card-sidebar {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+.verification-card-sidebar:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+.verification-card-sidebar .user-info h3 {
+  font-size: 1rem;
+  margin: 0 0 10px 0;
   color: #2c3e50;
-  margin-bottom: 10px;
-  font-size: 1.2rem;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 5px;
 }
-
-.user-info p {
-  margin: 8px 0;
-  color: #34495e;
-  line-height: 1.4;
+.verification-card-sidebar .user-info p {
+  margin: 5px 0;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+}
+.verification-card-sidebar .user-info strong {
+  color: #333;
+  min-width: 60px;
+  display: inline-block;
 }
 
 .verification-actions {
   display: flex;
-  gap: 15px;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
   justify-content: flex-end;
-  margin-top: 10px;
 }
-
-.verify-button {
-  background-color: #27ae60 !important;
-  color: white;
-  padding: 8px 20px !important;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 0 !important;
-}
-
-.verify-button:hover {
-  background-color: #219653 !important;
-}
-
+.verify-button,
 .deny-button {
-  background-color: #e74c3c !important;
-  color: white;
-  padding: 8px 20px !important;
+  padding: 7px 14px; /* Ukuran tombol verifikasi */
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 0 !important;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
 }
-
+.verify-button {
+  background-color: #28a745;
+  color: white;
+} /* Warna hijau */
+.verify-button:hover {
+  background-color: #218838;
+}
+.deny-button {
+  background-color: #dc3545;
+  color: white;
+} /* Warna merah */
 .deny-button:hover {
-  background-color: #c0392b !important;
+  background-color: #c82333;
 }
 
-/* Responsif */
-@media (min-width: 768px) {
-  .verification-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .verification-card {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .user-info {
-    flex: 1;
-  }
-
-  .verification-actions {
-    flex-direction: column;
-    margin-top: 0;
-    min-width: 120px;
-  }
+.refresh-button {
+  margin-top: 20px; /* Beri jarak atas jika belum ada */
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  width: 100%; /* Penuhkan lebar */
+  text-align: center;
+}
+.refresh-button:hover {
+  background-color: #e0e0e0;
 }
 
-@media (max-width: 600px) {
-  .admin-modal {
-    width: 95%;
-    padding: 15px;
-  }
+.add-station-form-sidebar {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+.add-station-form-sidebar h4 {
+  margin: 0 0 18px 0;
+  font-size: 1.05rem;
+  color: #333;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+.add-station-form-sidebar input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+.latlng-inputs {
+  display: grid; /* Grid agar rapi */
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px; /* Sesuaikan margin bawah */
+}
+.latlng-inputs input {
+  margin-bottom: 0;
+} /* Hapus margin bawah input di grid */
 
-  .user-management table {
-    font-size: 14px;
-  }
+.submit-station-btn {
+  background-color: #007bff; /* Warna biru primer */
+  color: white;
+  border: none;
+  padding: 11px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 500;
+  width: 100%;
+  margin-top: 10px; /* Jarak dari input lat/lng */
+  transition: background-color 0.2s;
+}
+.submit-station-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+.submit-station-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+} /* Warna disable */
 
-  .user-management th,
-  .user-management td {
-    padding: 8px;
-  }
+.station-list-sidebar h4 {
+  margin: 0 0 15px 0;
+  font-size: 1.05rem;
+  color: #333;
+  text-align: center;
+}
+.station-list-sidebar ul {
+  list-style: none;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 4px;
+} /* Batasi tinggi & scroll jika perlu */
+.station-list-sidebar li {
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  padding: 12px 15px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.station-list-sidebar li:last-child {
+  border-bottom: none;
+}
+.station-list-sidebar li strong {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+  color: #212529;
+}
 
-  .verification-actions {
-    flex-direction: column;
-  }
+/* Styling Pesan Loading/Error/Kosong */
+.loading-message,
+.error-message,
+.empty-message {
+  text-align: center;
+  padding: 25px 15px; /* Padding lebih besar */
+  color: #6c757d; /* Warna abu-abu */
+  font-style: italic;
+  font-size: 14px;
+}
+.error-message {
+  color: #dc3545; /* Warna merah error */
+  font-style: normal;
+  font-weight: 500;
+  border: 1px solid #f5c6cb; /* Border merah muda */
+  background-color: #f8d7da; /* Background merah muda */
+  border-radius: 4px;
+}
+
+@keyframes blink-animation {
+  0% {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #333;
+  } /* State normal */
+  50% {
+    background-color: #ffe6e6;
+    border-color: #ff8080;
+    color: #d63031;
+  } /* State highlight (merah muda) */
+  100% {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #333;
+  } /* Kembali normal */
+}
+
+.control-button-overlay.blinking {
+  animation: blink-animation 1.5s infinite; /* Durasi 1.5 detik, berulang */
+  font-weight: 600; /* Tebalkan teks saat blinking */
+}
+
+.station-subnav {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.station-subnav button {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #6c757d;
+  border-bottom: 3px solid transparent; /* Indikator tidak aktif */
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.station-subnav button:hover {
+  color: #343a40;
+}
+
+.station-subnav button.active {
+  color: #007bff; /* Warna biru untuk aktif */
+  border-bottom-color: #007bff;
+  font-weight: 600;
 }

@@ -5,7 +5,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import "./login.css";
 // Import your logo image - adjust the path as needed
-import logoImage from "../assets/logo.png"; 
 // Background image is handled via CSS
 
 const Login = () => {
@@ -82,8 +81,7 @@ const Login = () => {
     <div className="login-container"> 
       <div className="login-content">
         <div className="login-illustration">
-          {/* Logo in the left section */}
-          <img src={logoImage} alt="Jogo Suroboyo" className="jogo-logo" />
+          
           
         </div>
         
@@ -96,11 +94,11 @@ const Login = () => {
             
             <form onSubmit={handleLogin} className="login-form">
               <div className="login-input-group">
-                <label htmlFor="username" className="login-label">Username</label>
+                <label htmlFor="username" className="login-label"></label>
                 <input
                   id="username"
                   type="email"
-                  placeholder="Enter your username"
+                  placeholder="Username"
                   className="login-input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -109,11 +107,11 @@ const Login = () => {
               </div>
               
               <div className="login-input-group">
-                <label htmlFor="password" className="login-label">Password</label>
+                <label htmlFor="password" className="login-label"></label>
                 <input
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Password"
                   className="login-input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
