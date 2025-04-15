@@ -11,7 +11,7 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
-  background: url("../assets/bg.jpg") center/cover no-repeat;
+  background: url("../assets/bg.png") center/cover no-repeat;
   display: flex;
   flex-direction: column;
   overflow: hidden;

@@ -45,7 +45,7 @@ body {
 }
 
 .user-greeting-overlay {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   color: #333;
   margin-right: 10px;
@@ -69,6 +69,7 @@ body {
   text-align: center;
   pointer-events: none; /* Agar tidak mengganggu klik tombol */
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); /* Shadow tipis */
+  animation: blink 1.5s linear infinite;
 }
 
 .control-button-overlay:hover:not(:disabled) {
@@ -132,7 +133,7 @@ body {
   padding: 15px 20px;
   border-bottom: 1px solid #e0e0e0;
   flex-shrink: 0; /* Header tidak scroll */
-  background-color: #e9ecef; /* Warna header sidebar admin */
+  background-color: rgba(0, 204, 255, 0.3); /* Warna header sidebar admin */
 }
 
 .admin-sidebar-header h2 {
@@ -356,7 +357,7 @@ body {
 .station-list-sidebar ul {
   list-style: none;
   padding: 0;
-  max-height: 300px;
+  max-height: 700px;
   overflow-y: auto;
   border: 1px solid #eee;
   border-radius: 4px;
@@ -365,7 +366,7 @@ body {
   background-color: #fff;
   border-bottom: 1px solid #eee;
   padding: 12px 15px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
 }
 .station-list-sidebar li:last-child {
@@ -446,4 +447,103 @@ body {
   color: #007bff; /* Warna biru untuk aktif */
   border-bottom-color: #007bff;
   font-weight: 600;
+}
+
+/* Styling untuk Navigasi Sub-Bagian Laporan */
+.report-subnav {
+  display: flex;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.report-subnav button {
+  flex-grow: 1; /* Biarkan tombol mengisi ruang */
+  padding: 10px 15px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c757d; /* Warna teks tidak aktif */
+  text-align: center;
+  border-bottom: 2px solid transparent; /* Untuk indikator aktif */
+  margin-bottom: -2px; /* Agar border bawah menyatu */
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.report-subnav button:hover {
+  color: #495057;
+}
+
+.report-subnav button.active {
+  color: #007bff; /* Warna teks aktif */
+  border-bottom-color: #007bff; /* Warna border aktif */
+  font-weight: 600;
+}
+
+/* Styling untuk Kontainer Daftar Laporan */
+.report-list-container {
+  margin-top: 15px;
+}
+
+.report-list {
+  /* Atur tinggi maksimum dan scroll jika diperlukan */
+  max-height: calc(
+    100vh - 250px
+  ); /* Contoh: Sesuaikan tinggi berdasarkan viewport */
+  overflow-y: auto;
+  padding-right: 5px; /* Ruang untuk scrollbar */
+}
+
+.report-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.report-item {
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.report-item strong {
+  font-weight: 600;
+  color: #343a40;
+  display: inline-block; /* Atau block jika ingin baris baru */
+  margin-right: 5px;
+}
+
+.report-item .detail {
+  color: #6c757d; /* Warna abu-abu untuk detail */
+  font-size: 12px;
+  margin: 2px 0;
+  display: inline-block; /* Atau block */
+}
+
+.report-item .timestamp {
+  display: block; /* Timestamp di baris baru */
+  font-size: 11px;
+  color: #adb5bd;
+  margin-top: 5px;
+  text-align: right;
+  font-style: italic;
+}
+
+/* Style tombol refresh di dalam list */
+.report-list .refresh-button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 8px;
+}
+
+/* Style pesan kosong */
+.report-list .empty-message {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+  font-style: italic;
 }

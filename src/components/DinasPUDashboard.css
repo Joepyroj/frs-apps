@@ -1,0 +1,184 @@
+/* Wrapper Utama */
+.dinaspu-dashboard-overlay {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; /* Penting untuk contain positioning */
+}
+
+/* Kontainer Peta Fullscreen */
+.map-container-fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+/* Kontrol Overlay */
+.overlay-controls {
+  position: absolute;
+  top: 15px; /* Jarak dari atas */
+  left: 15px; /* Jarak dari kiri */
+  z-index: 1000; /* Di atas peta */
+  display: flex;
+  align-items: center;
+  background-color: rgba(112, 228, 189, 0.927); /* Background agar terbaca */
+  padding: 8px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.3s ease; /* Transisi halus saat greeting hilang/muncul */
+}
+
+.user-greeting-overlay {
+  font-size: 14px; /* Sesuaikan */
+  font-weight: 500;
+  color: #333;
+  margin-right: 15px; /* Jarak ke tombol */
+  white-space: nowrap;
+}
+
+.control-button-overlay {
+  padding: 6px 10px; /* Sesuaikan padding */
+  font-size: 13px; /* Sesuaikan */
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.control-button-overlay:hover {
+  background-color: #f0f0f0;
+  border-color: #bbb;
+}
+
+.control-button-overlay.active {
+  background-color: #e8f0fe;
+  border-color: #1a73e8;
+  color: #1967d2;
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  position: fixed; /* Fixed relatif ke viewport */
+  top: 0;
+  left: 0;
+  width: 300px; /* Lebar sidebar */
+  max-width: 90%; /* Maksimum lebar di layar kecil */
+  height: 100%;
+  background-color: #77b2ee;
+  border-right: 1px solid #e0e0e0;
+  box-shadow: 3px 0 6px rgba(0, 0, 0, 0.1);
+  transform: translateX(-100%); /* Sembunyi di kiri */
+  transition: transform 0.3s ease-in-out;
+  z-index: 1001; /* Di atas segalanya */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Munculkan Sidebar */
+.dinaspu-dashboard-overlay.sidebar-open .sidebar-overlay {
+  transform: translateX(0%);
+}
+
+/* Konten di dalam Sidebar (sama seperti sebelumnya) */
+.sidebar-report-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 15px; /* Padding untuk konten */
+}
+.report-header-sidebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+.report-header-sidebar h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.close-sidebar-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #777;
+  padding: 0 5px;
+}
+.close-sidebar-button:hover {
+  color: #333;
+}
+.report-list-sidebar {
+  flex-grow: 1;
+  padding-right: 5px;
+}
+.report-item-sidebar {
+  background: #fff;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border-radius: 5px;
+  border: 1px solid #eee;
+  font-size: 13px;
+}
+.report-item-sidebar .report-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #2c3e50;
+  font-size: 14px;
+}
+.report-item-sidebar .report-detail {
+  color: #555;
+  margin: 2px 0;
+  font-size: 12px;
+}
+.report-item-sidebar .detail-label {
+  font-weight: 600;
+  margin-right: 4px;
+}
+.report-item-sidebar .report-timestamp {
+  color: #888;
+  font-size: 11px;
+  text-align: right;
+  margin-top: 4px;
+  font-style: italic;
+}
+.loading-message,
+.error-message,
+.empty-message {
+  text-align: center;
+  padding: 15px;
+  color: #666;
+  font-style: italic;
+}
+.error-message {
+  color: #e74c3c;
+}
+.load-more-container {
+  padding: 15px 0 5px 0;
+  text-align: center;
+  border-top: 1px solid #eee;
+  flex-shrink: 0;
+}
+.load-more-button {
+  padding: 8px 15px;
+  cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.load-more-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.load-more-button:hover:not(:disabled) {
+  background-color: #2980b9;
+}
